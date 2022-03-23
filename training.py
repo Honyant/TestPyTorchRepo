@@ -1,4 +1,3 @@
-import resnet
 SERIAL_EXEC = xmp.MpSerialExecutor()
 # Only instantiate model weights once in memory.
 WRAPPED_MODEL = xmp.MpModelWrapper(ResNet152())
