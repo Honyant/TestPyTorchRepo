@@ -26,4 +26,10 @@ FLAGS['num_epochs'] = 60
 FLAGS['num_cores'] = 8 if os.environ.get('TPU_NAME', None) else 1
 FLAGS['log_steps'] = 20
 FLAGS['metrics_debug'] = False
+import sys
+sys.path.append("..")
 
+__all__ = ["plot", "resnet", "train"]
+from plot import *
+from resnet import *
+from train import *
