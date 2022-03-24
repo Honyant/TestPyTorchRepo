@@ -112,8 +112,7 @@ def train_resnet152():
     print('[xla:{}] Accuracy={:.2f}%'.format(
         xm.get_ordinal(), accuracy), flush=True)
     return accuracy, data, pred, target
-  import time
-  time.get
+  
   # Train and eval loops
   accuracy = 0.0
   data, pred, target = None, None, None
