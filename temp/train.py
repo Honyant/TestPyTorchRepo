@@ -1,3 +1,21 @@
+import numpy as np
+import os
+import time
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import torch.optim as optim
+import torch_xla
+import torch_xla.core.xla_model as xm
+import torch_xla.debug.metrics as met
+import torch_xla.distributed.parallel_loader as pl
+import torch_xla.distributed.xla_multiprocessing as xmp
+import torch_xla.utils.utils as xu
+import torchvision
+from torchvision import datasets, transforms
+from matplotlib import pyplot as plt
+from resnet import *
+from flags import *
 SERIAL_EXEC = xmp.MpSerialExecutor()
 # Only instantiate model weights once in memory.
 WRAPPED_MODEL = xmp.MpModelWrapper(ResNet152())
@@ -59,7 +77,7 @@ def train_resnet152():
   # Get loss function, optimizer, and model
   device = xm.xla_device()
   model = WRAPPED_MODEL.to(device)
-  optimizer = optim.Adam(params,lr=0.005,betas=(0.9,0.999),eps=1e-08,weight_decay=0,amsgrad=False)
+  optimizer = optim.Adam(model.parameters(),lr=0.005,betas=(0.9,0.999),eps=1e-08,weight_decay=0,amsgrad=False)
   loss_fn = nn.NLLLoss()
 
   def train_loop_fn(loader):

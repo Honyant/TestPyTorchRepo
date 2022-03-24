@@ -1,8 +1,4 @@
-import sys
-sys.path.append("..")
 
-
-ffghfg=45
 
 from matplotlib import pyplot as plt
 import numpy as np
@@ -35,6 +31,7 @@ FLAGS['metrics_debug'] = False
 
 
 #__all__ = ["plot", "resnet", "train"]
+from flags import *
 from plot import *
 from resnet import *
 from train import *
