@@ -78,6 +78,8 @@ def train_resnet152():
   device = xm.xla_device()
   model = WRAPPED_MODEL.to(device)
   optimizer = optim.Adam(model.parameters(),lr=0.005,betas=(0.9,0.999),eps=1e-08,weight_decay=0,amsgrad=False)
+  scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=200)
+
   loss_fn = nn.NLLLoss()
 
   def train_loop_fn(loader):
@@ -118,11 +120,10 @@ def train_resnet152():
     para_loader = pl.ParallelLoader(train_loader, [device])
     train_loop_fn(para_loader.per_device_loader(device))
     xm.master_print("Finished training epoch {}".format(epoch))
-
+    scheduler.step()
     para_loader = pl.ParallelLoader(test_loader, [device])
     accuracy, data, pred, target  = test_loop_fn(para_loader.per_device_loader(device))
     if FLAGS['metrics_debug']:
       xm.master_print(met.metrics_report(), flush=True)
 
   return accuracy, data, pred, target
-  
