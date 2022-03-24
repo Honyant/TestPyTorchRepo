@@ -112,18 +112,29 @@ def train_resnet152():
     print('[xla:{}] Accuracy={:.2f}%'.format(
         xm.get_ordinal(), accuracy), flush=True)
     return accuracy, data, pred, target
-
+  import time
+  time.get
   # Train and eval loops
   accuracy = 0.0
   data, pred, target = None, None, None
+  para_loader = pl.ParallelLoader(train_loader, [device])
+  lastTime = time.time()
+
   for epoch in range(1, FLAGS['num_epochs'] + 1):
-    para_loader = pl.ParallelLoader(train_loader, [device])
     train_loop_fn(para_loader.per_device_loader(device))
     xm.master_print("Finished training epoch {}".format(epoch))
     scheduler.step()
-    para_loader = pl.ParallelLoader(test_loader, [device])
-    accuracy, data, pred, target  = test_loop_fn(para_loader.per_device_loader(device))
+    now = time.time()
+    print("Loop Time {0}".format(now - lastTime))
+    print("Imgs / sec {0}".format(6000/(now - lastTime)))
+    lastTime = time.time()
+
+    #if epoch % 20==0:
+      #
+      #
     if FLAGS['metrics_debug']:
       xm.master_print(met.metrics_report(), flush=True)
 
   return accuracy, data, pred, target
+  para_loader = pl.ParallelLoader(test_loader, [device])
+  accuracy, data, pred, target  = test_loop_fn(para_loader.per_device_loader(device))
