@@ -77,7 +77,7 @@ def train_resnet152():
   # Get loss function, optimizer, and model
   device = xm.xla_device()
   model = WRAPPED_MODEL.to(device)
-  optimizer = optim.Adam(model.parameters(),lr=0.005,betas=(0.9,0.999),eps=1e-08,weight_decay=0,amsgrad=False)
+  optimizer = optim.Adam(model.parameters(),lr=0.005,betas=(0.9,0.999),eps=1e-08,weight_decay=1e-5,amsgrad=False)
   scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=200)
 
   loss_fn = nn.NLLLoss()
